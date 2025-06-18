@@ -51,8 +51,17 @@ class GenerateFullCrud extends Command
         // Adiciona rota ao web.php
         $this->addRouteToWeb($modelName);
         
-        // Executa as migrations automaticamente
-        $this->call('migrate');
+        // Executa as migrations automaticamente apenas se não existir a tabela
+        $tableName = $replacements['{{table}}'];
+        if (!\Schema::hasTable($tableName)) {
+            $migrateOptions = [];
+            if ($force) {
+                $migrateOptions['--force'] = true;
+            }
+            $this->call('migrate', $migrateOptions);
+        } else {
+            $this->warn("A tabela {$tableName} já existe. Migração ignorada.");
+        }
 
         $this->info("Estrutura CRUD para {$modelName} gerada com sucesso!");
     }
