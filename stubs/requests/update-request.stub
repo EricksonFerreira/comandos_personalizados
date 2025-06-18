@@ -14,7 +14,7 @@ class Update{{model}}Request extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|string|max:255|unique:{{table}},nome,' . \$this->route('{{routeParam}}'),
+            'nome' => 'required|string|max:255|unique:{{table}},nome,' . $this->route('{{routeParam}}'),
             'ativo' => 'required|string|max:1',
         ];
     }
