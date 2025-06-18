@@ -9,11 +9,11 @@ use Illuminate\Support\Str;
 class GenerateFullCrud extends Command
 {
     protected $signature = 'make:full-crud 
-                            {name : The name of the model (singular)}
-                            {--table= : The table name (optional)}
-                            {--force : Overwrite existing files}';
+                            {name : O nome do modelo (singular)}
+                            {--table= : O nome da tabela (opcional)}
+                            {--force : Sobrescrever arquivos existentes}';
     
-    protected $description = 'Generate complete CRUD structure (Model, Controller, Service, Requests, Views, Migration, Routes)';
+    protected $description = 'Gerar estrutura CRUD completa (Model, Controller, Service, Requests, Views, Migration, Routes)';
 
     protected $filesystem;
 
@@ -29,7 +29,7 @@ class GenerateFullCrud extends Command
         $tableName = $this->option('table') ?: Str::snake(Str::plural($modelName));
         $force = $this->option('force');
 
-        // Define all variables to replace in stubs
+        // Define todas as variáveis para substituir nos stubs
         $replacements = [
             '{{model}}' => $modelName,
             '{{modelLower}}' => Str::lower($modelName),
@@ -39,7 +39,7 @@ class GenerateFullCrud extends Command
             '{{routeParam}}' => Str::lower($modelName),
         ];
 
-        // Generate all components
+        // Gerar todos os componentes
         $this->generateModel($replacements, $force);
         $this->generateRequests($replacements, $force);
         $this->generateService($replacements, $force);
@@ -48,13 +48,13 @@ class GenerateFullCrud extends Command
         $this->generateViews($replacements, $force);
         $this->generateRoutes($replacements, $force);
 
-        // Add route to web.php
+        // Adiciona rota ao web.php
         $this->addRouteToWeb($modelName);
         
         // Executa as migrations automaticamente
         $this->call('migrate');
 
-        $this->info("CRUD structure for {$modelName} generated successfully!");
+        $this->info("Estrutura CRUD para {$modelName} gerada com sucesso!");
     }
 
     protected function generateModel($replacements, $force)
@@ -130,7 +130,7 @@ class GenerateFullCrud extends Command
             $directory = resource_path("views/{$replacements['{{modelLower}}']}");
             if (!$this->filesystem->exists($directory)) {
                 $this->filesystem->makeDirectory($directory, 0755, true);
-                $this->info("Created directory: {$directory}");
+                $this->info("Diretório criado: {$directory}");
             }
             
             $path = "{$directory}/{$type}.blade.php";
@@ -160,13 +160,13 @@ class GenerateFullCrud extends Command
         
         $content = $this->filesystem->get($webPath);
         
-        // Check if route already exists
+        // Verifica se a rota já existe
         if (strpos($content, "routes/grupos/{$modelLower}.php") === false) {
             $content .= "\n\n{$routeCode}\n";
             $this->filesystem->put($webPath, $content);
-            $this->info("Route added to web.php");
+            $this->info("Rota adicionada ao web.php");
         } else {
-            $this->warn("Route already exists in web.php - skipped");
+            $this->warn("Rota já existe no web.php - ignorada");
         }
     }
 
@@ -175,7 +175,7 @@ class GenerateFullCrud extends Command
         $stubPath = base_path("stubs/{$type}.stub");
         
         if (!$this->filesystem->exists($stubPath)) {
-            throw new \Exception("Stub not found: {$stubPath}");
+            throw new \Exception("Stub não encontrado: {$stubPath}");
         }
         
         return $this->filesystem->get($stubPath);
@@ -193,12 +193,12 @@ class GenerateFullCrud extends Command
     protected function writeFile($path, $content, $force)
     {
         if ($this->filesystem->exists($path) && !$force) {
-            $this->warn("File already exists: {$path} (use --force to overwrite)");
+            $this->warn("Arquivo já existe: {$path} (use --force para sobrescrever)");
             return false;
         }
 
         $this->filesystem->put($path, $content);
-        $this->info("Created: {$path}");
+        $this->info("Criado: {$path}");
         return true;
     }
 }
