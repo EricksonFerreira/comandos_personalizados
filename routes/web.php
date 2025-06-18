@@ -6,8 +6,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 })->name('home');
-
-Route::middleware('web')
-    ->group(function() {
-        require base_path('routes/grupos/produto.php');
-    });
