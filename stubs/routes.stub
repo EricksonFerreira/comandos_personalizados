@@ -1,0 +1,11 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{{model}}Controller;
+
+Route::prefix('{{modelLower}}')->name('{{modelLower}}.')->group(function () {
+    Route::post('setperpage', [{{model}}Controller::class, 'setPerPage'])->name('setPerPage');
+    Route::get('removerfiltro', [{{model}}Controller::class, 'removerFiltro'])->name('removerFiltro');
+    Route::get('filtro', [{{model}}Controller::class, 'filtro'])->name('filtro');
+});
+
+Route::resource('{{modelLower}}', {{model}}Controller::class);
